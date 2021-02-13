@@ -64,7 +64,7 @@ exports.config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: 'debug',
+  logLevel: 'warn',
   //
   // Set specific log levels per logger
   // loggers:
@@ -91,7 +91,7 @@ exports.config = {
   baseUrl: 'https://www.saucedemo.com/',
   //
   // Default timeout for all waitFor* commands.
-  waitforTimeout: 25000,
+  waitforTimeout: 10000,
   //
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send response
@@ -172,6 +172,9 @@ exports.config = {
     const chai = require('chai');
     global.expect = chai.expect;
     global.should = chai.should();
+
+    const chance = require('chance');
+    global.chance = chance;
   }
   /**
    * Runs before a WebdriverIO command gets executed.
