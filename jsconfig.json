@@ -1,8 +1,15 @@
 {
-  "include": ["**/*.js", "**/*.json", "node_modules/@wdio/sync", "node_modules/@wdio/mocha-framework"],
-  "exclude": ["node_modules"],
-  "target": "es2018",
-  "module": "es6",
-  "moduleResolution": "node",
-  "checkJs": true,
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es2018",
+    "types": [
+        "node",
+        "webdriverio/sync",
+        "@wdio/mocha-framework"
+    ],
+    "moduleResolution": "node",
+    "checkJs": true,
+  },
+  "include": ["**/*.js", "**/*.json"],
+  "exclude": ["node_modules", "wdio.conf.js"]
 }

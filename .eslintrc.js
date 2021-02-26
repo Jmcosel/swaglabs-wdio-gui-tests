@@ -1,16 +1,21 @@
 module.exports = {
   plugins: ['prettier', 'wdio'],
+  extends: [
+    'eslint:recommended',
+    'plugin:prettier/recommended',
+    'plugin:wdio/recommended'
+  ],
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module'
+  },
   env: {
     browser: true,
-    es2018: true,
+    es2017: true,
     node: true,
     mocha: true
   },
-  extends: ['eslint:recommended', 'prettier', 'plugin:wdio:recommended'],
-  parserOptions: {
-    sourceType: 'module'
-  },
   rules: {
-    'prettier/prettier': ['error']
+    'prettier/prettier': 'error'
   }
 };

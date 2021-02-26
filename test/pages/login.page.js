@@ -22,7 +22,7 @@ class LoginPage extends GeneralPage {
   }
 
   get robotImage() {
-    return $('img.bot_column');
+    return $('div.bot_column');
   }
 
   get errorMsg() {
@@ -31,10 +31,6 @@ class LoginPage extends GeneralPage {
 
   open() {
     super.open();
-    this.waitForElements();
-  }
-
-  waitForElements(visibility = true) {
     let elements = [
       this.header,
       this.usernameField,
@@ -42,9 +38,14 @@ class LoginPage extends GeneralPage {
       this.submitButton,
       this.robotImage
     ];
-    super.waitForElements(elements, visibility);
+    super.waitForElements(elements);
   }
 
+  /**
+   * Handles the login functionality.
+   * @param {string} username
+   * @param {string} password
+   */
   login(username, password) {
     this.usernameField.setValue(username);
     this.passwordField.setValue(password);

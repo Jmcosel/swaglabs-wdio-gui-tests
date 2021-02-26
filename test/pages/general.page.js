@@ -9,6 +9,10 @@ export default class GeneralPage {
     };
   }
 
+  get mainElement() {
+    return $(this.selector);
+  }
+
   /**
    * Open the class's page
    */
@@ -46,12 +50,11 @@ export default class GeneralPage {
   /**
    * Takes a list of WDIO elements and ensures that they all are (in)visible on the page.
    * Will wait until they each become (in)visible, or will fail.
-   * @param {Array[]} elements - A list of WDIO elements
-   * @param {boolean} visibility - Controls whether you wish for each element to be visible or not.
-   * @returns {boolean} - Returns true if it finishes successfully.
+   * @param {Array<WebdriverIO.Element>} elements - A list of WDIO elements
+   * @param {Boolean} visibility - Controls whether you wish for each element to be visible or not.
    */
   waitForElements(elements, visibility = true) {
-    return elements.forEach((element) =>
+    elements.forEach((element) =>
       element.waitForDisplayed({
         reverse: !visibility,
         timeoutMsg: `ERROR: Element ${element.selector} never became visible on the ${this.name} page.`
