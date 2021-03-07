@@ -5,6 +5,10 @@ class InventoryPage extends GeneralPage {
     super('Inventory', 'div.inventory_container');
   }
 
+  get subheaderLabel() {
+    return $('div.product_label');
+  }
+
   get sortDropdown() {
     return $('select.product_sort_container');
   }
@@ -18,7 +22,7 @@ class InventoryPage extends GeneralPage {
   }
 
   open() {
-    super.open('inventory');
+    super.open('inventory.html');
   }
 }
 

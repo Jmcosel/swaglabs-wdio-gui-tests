@@ -22,20 +22,6 @@ export default class GeneralPage {
   }
 
   /**
-   * Fully de-authenticate with the product
-   */
-  softFreshStart() {
-    browser.deleteCookies();
-  }
-
-  /**
-   * Destroys the current session and remakes it.
-   */
-  hardFreshStart() {
-    browser.reloadSession();
-  }
-
-  /**
    * Wait for the class to be (in)visible
    * @param {boolean} visibility - Controls whether you wish for the page to be visible or not.
    * @returns {boolean} - Returns true if it finishes successfully.

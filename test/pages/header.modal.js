@@ -17,17 +17,52 @@ class HeaderModal extends GeneralPage {
     return $('div.shopping_cart_container');
   }
 
+  get shoppingCartBadge() {
+    return $('span.shopping_cart_badge');
+  }
+
   get menuList() {
     return $('div.bm-menu');
+  }
+
+  get allItemsLink() {
+    return $('a#inventory_sidebar_link');
+  }
+
+  get aboutLink() {
+    return $('a#about_sidebar_link');
   }
 
   get logoutLink() {
     return $('a#logout_sidebar_link');
   }
 
-  logout() {
+  get resetAppLink() {
+    return $('a#reset_sidebar_link');
+  }
+
+  openMenu() {
     this.waitForAndClick(this.menuIcon);
+  }
+
+  clickAllItems() {
+    this.openMenu();
+    this.waitForAndClick(this.allItemsLink);
+  }
+
+  clickAbout() {
+    this.openMenu();
+    this.waitForAndClick(this.aboutLink);
+  }
+
+  clickLogout() {
+    this.openMenu();
     this.waitForAndClick(this.logoutLink);
+  }
+
+  clickResetAppState() {
+    this.openMenu();
+    this.waitForAndClick(this.resetAppLink);
   }
 
   waitForElements(visibility) {
