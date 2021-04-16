@@ -2,11 +2,6 @@ export default class GeneralPage {
   constructor(name, selector) {
     this.name = name;
     this.selector = selector;
-    // Combines WDIO's "waitForClickable" and "click" commands for simple usage.
-    this.waitForAndClick = (element) => {
-      element.waitForClickable();
-      element.click();
-    };
   }
 
   get mainElement() {
@@ -15,6 +10,7 @@ export default class GeneralPage {
 
   /**
    * Open the class's page
+   * @param {String} path - Appends the provided text onto the baseUrl, defaults to ''
    */
   open(path = '') {
     browser.url(path);
@@ -23,8 +19,7 @@ export default class GeneralPage {
 
   /**
    * Wait for the class to be (in)visible
-   * @param {boolean} visibility - Controls whether you wish for the page to be visible or not.
-   * @returns {boolean} - Returns true if it finishes successfully.
+   * @param {Boolean} visibility - Controls whether you wish for the page to be visible or not.
    */
   waitForPageShown(visibility = true) {
     return $(this.selector).waitForDisplayed({

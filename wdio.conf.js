@@ -180,9 +180,26 @@ exports.config = {
    * @param {Object}         browser      instance of created browser/device session
    */
   // eslint-disable-next-line no-unused-vars
-  before: function (capabilities, specs) {
-    const chance = require('chance');
-    global.chance = chance;
+  before: function (capabilities, specs, browser) {
+    global.chance = require('chance');
+
+    // Custom command creation
+
+    /**
+     * Waits for and then clicks the element.
+     * @param {Number} timeout - Value in ms, to override the default. Defaults to the waitforTimeout value set in WDIO's config.
+     * @param {Boolean} strict - If true, use the stricter "waitForClickable" method, rather than "waitForDisplayed". Defaults to true.
+     */
+    browser.addCommand(
+      'waitForAndClick',
+      function (timeout = browser.config.waitforTimeout, strict = true) {
+        strict
+          ? this.waitForClickable({ timeout: timeout })
+          : this.waitForDisplayed({ timeout: timeout });
+        this.click();
+      },
+      true
+    );
   }
   /**
    * Runs before a WebdriverIO command gets executed.

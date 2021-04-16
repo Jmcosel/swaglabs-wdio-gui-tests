@@ -41,28 +41,24 @@ class HeaderModal extends GeneralPage {
     return $('a#reset_sidebar_link');
   }
 
-  openMenu() {
-    this.waitForAndClick(this.menuIcon);
-  }
-
   clickAllItems() {
-    this.openMenu();
-    this.waitForAndClick(this.allItemsLink);
+    this.menuIcon.waitForAndClick();
+    this.allItemsLink.waitForAndClick();
   }
 
   clickAbout() {
-    this.openMenu();
-    this.waitForAndClick(this.aboutLink);
+    this.menuIcon.waitForAndClick();
+    this.aboutLink.waitForAndClick();
   }
 
   clickLogout() {
-    this.openMenu();
-    this.waitForAndClick(this.logoutLink);
+    this.menuIcon.waitForAndClick();
+    this.logoutLink.waitForAndClick();
   }
 
   clickResetAppState() {
-    this.openMenu();
-    this.waitForAndClick(this.resetAppLink);
+    this.menuIcon.waitForAndClick();
+    this.resetAppLink.waitForAndClick();
   }
 
   waitForElements(visibility) {

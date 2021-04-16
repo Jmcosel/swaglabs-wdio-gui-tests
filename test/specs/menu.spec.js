@@ -18,13 +18,13 @@ beforeEach(() => {
 
 describe('Hamburger Menu', () => {
   it('Shopping cart icon redirects to the Cart page', () => {
-    HeaderModal.waitForAndClick(HeaderModal.shoppingCartIcon);
+    HeaderModal.shoppingCartIcon.waitForAndClick();
     expect(browser).toHaveUrlContaining('cart');
   });
 
   it('"All Items" correctly redirects back to the Products page', () => {
     // Navigate to a different page
-    HeaderModal.waitForAndClick(HeaderModal.shoppingCartIcon);
+    HeaderModal.shoppingCartIcon.waitForAndClick();
     CartPage.waitForPageShown();
     HeaderModal.clickAllItems();
     expect(browser).toHaveUrlContaining('inventory');
