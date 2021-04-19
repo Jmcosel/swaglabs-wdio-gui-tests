@@ -10,6 +10,6 @@
     "moduleResolution": "node",
     "checkJs": true,
   },
-  "include": ["**/*.js", "**/*.json", "wdio.d.ts"],
-  "exclude": ["node_modules", "wdio.conf.js"]
+  "include": ["**/*.js", "**/*.json", "global.d.ts", "wdio.d.ts"],
+  "exclude": ["node_modules"]
 }

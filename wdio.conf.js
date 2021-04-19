@@ -1,3 +1,5 @@
+const debug = process.env.DEBUG;
+
 exports.config = {
   //
   // ====================
@@ -37,7 +39,7 @@ exports.config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 10,
+  maxInstances: debug ? 1 : 10,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -48,7 +50,7 @@ exports.config = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 5,
+      maxInstances: debug ? 1 : 5,
       //
       browserName: 'chrome',
       acceptInsecureCerts: true
@@ -134,7 +136,7 @@ exports.config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000,
+    timeout: debug ? 9999999 : 60000,
     bail: false
   },
   //
@@ -181,7 +183,7 @@ exports.config = {
    */
   // eslint-disable-next-line no-unused-vars
   before: function (capabilities, specs, browser) {
-    global.chance = require('chance');
+    global.chance = require('chance').Chance();
 
     // Custom command creation
 
@@ -193,21 +195,24 @@ exports.config = {
     browser.addCommand(
       'waitForAndClick',
       function (timeout = browser.config.waitforTimeout, strict = true) {
-        strict
-          ? this.waitForClickable({ timeout: timeout })
-          : this.waitForDisplayed({ timeout: timeout });
+        strict ? this.waitForClickable({ timeout: timeout }) : this.waitForDisplayed({ timeout: timeout });
         this.click();
       },
       true
     );
-  }
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {String} commandName hook command name
    * @param {Array} args arguments that command would receive
    */
-  // beforeCommand: function (commandName, args) {
-  // },
+  // eslint-disable-next-line no-unused-vars
+  beforeCommand: function (commandName, args) {
+    // Slow down the execution if in debug mode
+    if (debug) {
+      browser.pause(50);
+    }
+  },
   /**
    * Hook that gets executed before the suite starts
    * @param {Object} suite suite details
@@ -234,9 +239,14 @@ exports.config = {
   /**
    * Function to be executed after a test (in Mocha/Jasmine).
    */
-  // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-  // },
-
+  // eslint-disable-next-line no-unused-vars
+  afterTest: function (test, context, { error, result, duration, passed, retries }) {
+    // Start REPL mode if in debug mode and the test fails
+    if (debug && !passed) {
+      console.log(error.stack);
+      browser.debug();
+    }
+  }
   /**
    * Hook that gets executed after the suite has ended
    * @param {Object} suite suite details

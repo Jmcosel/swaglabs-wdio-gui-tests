@@ -20,7 +20,7 @@
     "@wdio/spec-reporter": "^7.4.3",
     "@wdio/sync": "^7.4.6",
     "chance": "^1.1.7",
-    "chromedriver": "^89.0.0",
+    "chromedriver": "^90.0.0",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-prettier": "^3.4.0",

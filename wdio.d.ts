@@ -1,11 +1,6 @@
-export {};
-
 declare global {
   namespace WebdriverIO {
-      // interface Browser {
-      //     browserCustomCommand: (arg: any) => void
-      // }
-
+      // interface Browser {}
       interface Element {
          /**
           * Waits for and then clicks the element.
@@ -16,3 +11,5 @@ declare global {
       }
   }
 }
+
+export {}

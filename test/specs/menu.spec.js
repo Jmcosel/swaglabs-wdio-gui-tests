@@ -4,10 +4,9 @@ import HeaderModal from '../pages/header.modal';
 import LoginPage from '../pages/login.page';
 import Users from '../util/users';
 
-let user = Users.standard;
-
 before(() => {
   LoginPage.open();
+  let user = Users.standard;
   LoginPage.login(user.username, user.password);
 });
 

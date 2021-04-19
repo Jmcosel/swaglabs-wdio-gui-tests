@@ -6,6 +6,9 @@
       "type": "node",
       "request": "launch",
       "args": ["wdio.conf.js", "--spec", "${file}"],
+      "env": {
+        "DEBUG": "true"
+      },
       "autoAttachChildProcesses": true,
       "program": "${workspaceRoot}/node_modules/@wdio/cli/bin/wdio.js",
       "skipFiles": [
