@@ -1,5 +1,3 @@
-import Chance from "chance";
-
 declare global {
   const chance: Chance.Chance;
   
@@ -9,3 +7,5 @@ declare global {
     }
   }
 }
+
+export {};

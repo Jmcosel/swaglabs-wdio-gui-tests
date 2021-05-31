@@ -37,6 +37,14 @@ class InventoryPage extends GeneralPage {
     return $('img.footer_robot');
   }
 
+  inventoryItemLink(itemName) {
+    return $(`div=${itemName}`);
+  }
+
+  open() {
+    super.open('inventory.html');
+  }
+
   addToCartButton(itemId) {
     return $(`#add-to-cart-${itemId}`);
   }
@@ -45,25 +53,19 @@ class InventoryPage extends GeneralPage {
     return $(`#remove-${itemId}`);
   }
 
-  open() {
-    super.open('inventory.html');
-  }
-
   /**
    * Adds the specified item name to the shopping cart.
-   * @param {String} itemName
+   * @param {String} itemId
    */
-  clickAddToCart(itemName) {
-    let itemId = itemName.replace(/\s/g, '-').toLowerCase();
+  clickAddToCart(itemId) {
     this.addToCartButton(itemId).waitForAndClick();
   }
 
   /**
    * Removes the specified item name from the shopping cart.
-   * @param {String} itemName
+   * @param {String} itemId
    */
-  clickRemoveFromCart(itemName) {
-    let itemId = itemName.replace(/\s/g, '-').toLowerCase();
+  clickRemoveFromCart(itemId) {
     this.removeFromCartButton(itemId).waitForAndClick();
   }
 }

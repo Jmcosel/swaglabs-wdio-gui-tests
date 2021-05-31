@@ -1,6 +1,14 @@
 declare global {
   namespace WebdriverIO {
-      // interface Browser {}
+      interface Browser {
+        /**
+        * Takes a list of WDIO elements and ensures that they all are (in)visible on the page.
+        * Will wait until they each become (in)visible, or will fail.
+        * @param {Array<WebdriverIO.Element>} elements - A list of WDIO elements
+        * @param {Boolean} visibility - Controls whether you wish for each element to be visible or not.
+        */
+        waitForElements: (elements: Array<WebdriverIO.Element>, visibility?: boolean) => void
+      }
       interface Element {
          /**
           * Waits for and then clicks the element.
@@ -12,4 +20,4 @@ declare global {
   }
 }
 
-export {}
+export {};

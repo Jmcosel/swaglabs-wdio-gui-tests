@@ -5,7 +5,8 @@
     "types": [
         "node",
         "webdriverio/sync",
-        "@wdio/mocha-framework"
+        "@wdio/mocha-framework",
+        "expect-webdriverio"
     ],
     "moduleResolution": "node",
     "checkJs": true,

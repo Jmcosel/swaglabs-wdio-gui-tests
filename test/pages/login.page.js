@@ -31,14 +31,8 @@ class LoginPage extends GeneralPage {
 
   open() {
     super.open();
-    let elements = [
-      this.header,
-      this.usernameField,
-      this.passwordField,
-      this.submitButton,
-      this.robotImage
-    ];
-    super.waitForElements(elements);
+    let elements = [this.header, this.usernameField, this.passwordField, this.submitButton, this.robotImage];
+    browser.waitForElements(elements);
   }
 
   /**

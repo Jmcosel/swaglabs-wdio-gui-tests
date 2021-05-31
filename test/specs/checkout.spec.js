@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 describe('Checkout', () => {
-  it('Adding/removing items to/from the cart shows/removes the item from the summart page', () => {
+  it('Adding/removing items to/from the cart shows/removes the item from the summary page', () => {
     let itemName = 'Sauce Labs Bolt T-Shirt';
     InventoryPage.open();
     InventoryPage.clickAddToCart(itemName);
@@ -29,6 +29,7 @@ describe('Checkout', () => {
     cartResult = CartPage.inventoryItems.find((element) => element.getText() === itemName);
     expect(cartResult).not.toExist();
   });
+
   it.skip('User can navigate through the checkout flow without issue', () => {});
   it.skip('Item total + tax is calculated correctly', () => {});
   it.skip('Field information is required to checkout', () => {});
