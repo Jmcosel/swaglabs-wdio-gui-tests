@@ -9,16 +9,12 @@ beforeEach(() => {
 
 describe('Login/Authentication', () => {
   it('A standard user can log in successfully', () => {
-    let user = Users.standard;
-
-    LoginPage.login(user.username, user.password);
+    LoginPage.login(Users.standard);
     expect(InventoryPage.mainElement).toBeDisplayed();
   });
 
   it('A locked out user cannot access the Products page', () => {
-    let user = Users.locked_out;
-
-    LoginPage.login(user.username, user.password);
+    LoginPage.login(Users.locked_out);
     expect(LoginPage.mainElement).toBeDisplayed();
     LoginPage.errorMsg.waitForDisplayed({
       timeoutMsg: `The login error message never displayed.`

@@ -9,6 +9,14 @@ class CartPage extends GeneralPage {
     return $$('div.inventory_item_name');
   }
 
+  get checkoutButton() {
+    return $('#checkout');
+  }
+
+  get cancelButton() {
+    return $('#continue-shopping');
+  }
+
   removeFromCartButton(itemId) {
     return $(`#remove-${itemId}`);
   }
@@ -24,6 +32,12 @@ class CartPage extends GeneralPage {
 
   open() {
     super.open('cart.html');
+    this.waitForElements();
+  }
+
+  waitForElements(visibility = true) {
+    let elements = [this.checkoutButton, this.cancelButton];
+    browser.waitForElements(elements, visibility);
   }
 }
 

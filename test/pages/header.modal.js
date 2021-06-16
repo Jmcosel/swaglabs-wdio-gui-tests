@@ -61,7 +61,7 @@ class HeaderModal extends GeneralPage {
     this.resetAppLink.waitForAndClick();
   }
 
-  waitForElements(visibility) {
+  waitForElements(visibility = true) {
     let elements = [this.menuIcon, this.mainLogo, this.shoppingCartIcon];
     browser.waitForElements(elements, visibility);
   }

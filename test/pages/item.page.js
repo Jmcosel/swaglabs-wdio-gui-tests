@@ -51,6 +51,7 @@ class ItemPage extends GeneralPage {
 
   open(itemId) {
     super.open(`inventory-item.html?id=${itemId}`);
+    this.waitForElements();
   }
 
   waitForElements(visibility) {

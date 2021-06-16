@@ -5,7 +5,7 @@ class LoginPage extends GeneralPage {
     super('Login', 'div.login_wrapper');
   }
 
-  get header() {
+  get headerLabel() {
     return $('div.login_logo');
   }
 
@@ -31,18 +31,21 @@ class LoginPage extends GeneralPage {
 
   open() {
     super.open();
-    let elements = [this.header, this.usernameField, this.passwordField, this.submitButton, this.robotImage];
-    browser.waitForElements(elements);
+    this.waitForElements();
+  }
+
+  waitForElements(visibility) {
+    let elements = [this.headerLabel, this.usernameField, this.passwordField, this.submitButton, this.robotImage];
+    browser.waitForElements(elements, visibility);
   }
 
   /**
    * Handles the login functionality.
-   * @param {string} username
-   * @param {string} password
+   * @param {Object} user
    */
-  login(username, password) {
-    this.usernameField.setValue(username);
-    this.passwordField.setValue(password);
+  login(user) {
+    this.usernameField.setValue(user.username);
+    this.passwordField.setValue(user.password);
     this.submitButton.click();
   }
 }

@@ -6,8 +6,7 @@ import Users from '../util/users';
 
 before(() => {
   LoginPage.open();
-  let user = Users.standard;
-  LoginPage.login(user.username, user.password);
+  LoginPage.login(Users.standard);
 });
 
 beforeEach(() => {

@@ -3,11 +3,11 @@ import ItemPage from '../pages/item.page';
 import HeaderModal from '../pages/header.modal';
 import LoginPage from '../pages/login.page';
 import Users from '../util/users';
+import { nameToId, compareSortedArrays } from '../util/misc';
 
 before(() => {
   LoginPage.open();
-  let user = Users.standard;
-  LoginPage.login(user.username, user.password);
+  LoginPage.login(Users.standard);
 });
 
 beforeEach(() => {
@@ -46,6 +46,7 @@ describe('Products Page', () => {
     // Compare the values to those on the details page
     InventoryPage.inventoryItemLink(expectedItemName).click();
     ItemPage.waitForPageShown();
+    ItemPage.waitForElements();
     expect(ItemPage.itemName).toHaveText(expectedItemName);
     expect(ItemPage.itemDescription).toHaveText(expectedItemDescription);
     expect(ItemPage.itemPrice).toHaveText(expectedItemPrice);
@@ -54,18 +55,11 @@ describe('Products Page', () => {
 
   it('Adding and removing an item to/from the cart is registered/remembered successfully', () => {
     // Pick an item at random
-    let itemCount = InventoryPage.inventoryItems.length;
-    let itemId = chance.integer({ min: 0, max: itemCount - 1 });
-    let itemName = InventoryPage.inventoryItemNames[itemId].getText();
+    let itemName = InventoryPage.pickItemRandomly().name;
     let initialShoppingCartSize = HeaderModal.shoppingCartBadge.isDisplayed()
       ? HeaderModal.shoppingCartBadge.getText()
       : '0';
-    let itemElementId = itemName
-      .replace(/\s/g, '-')
-      .replace(/\(/g, '\\(')
-      .replace(/\)/g, '\\)')
-      .replace(/\./g, '\\.')
-      .toLowerCase();
+    let itemElementId = nameToId(itemName);
     InventoryPage.clickAddToCart(itemElementId);
     let actualShoppingCartSize = HeaderModal.shoppingCartBadge.getText();
     expect(parseInt(actualShoppingCartSize)).toEqual(parseInt(initialShoppingCartSize) + 1);
@@ -75,6 +69,7 @@ describe('Products Page', () => {
     // Return back to inventory page and actully remove it
     ItemPage.backButton.click();
     InventoryPage.waitForPageShown();
+    InventoryPage.waitForElements();
     InventoryPage.clickRemoveFromCart(itemElementId);
     actualShoppingCartSize = HeaderModal.shoppingCartBadge.isDisplayed()
       ? HeaderModal.shoppingCartBadge.getText()
@@ -87,34 +82,15 @@ describe('Products Page', () => {
 
   it('The sort dropdown rearranges the product list as expected', function () {
     // First check the default, item names (A-Z)
-    _compareSortedArrays(InventoryPage.inventoryItemNames, (a, b) => (b > a ? -1 : 1));
+    compareSortedArrays(InventoryPage.inventoryItemNames, (a, b) => (b > a ? -1 : 1));
     // Check item names (Z-A)
     InventoryPage.sortDropdown.selectByAttribute('value', 'za');
-    _compareSortedArrays(InventoryPage.inventoryItemNames, (a, b) => (a > b ? -1 : 1));
+    compareSortedArrays(InventoryPage.inventoryItemNames, (a, b) => (a > b ? -1 : 1));
     // Check item prices (low -> high)
     InventoryPage.sortDropdown.selectByAttribute('value', 'lohi');
-    _compareSortedArrays(InventoryPage.inventoryItemPrices, (a, b) => a - b);
+    compareSortedArrays(InventoryPage.inventoryItemPrices, (a, b) => a - b);
     // Check item prices (high -> low)
     InventoryPage.sortDropdown.selectByAttribute('value', 'hilo');
-    _compareSortedArrays(InventoryPage.inventoryItemPrices, (a, b) => b - a);
+    compareSortedArrays(InventoryPage.inventoryItemPrices, (a, b) => b - a);
   });
 });
-
-/**
- * Checks that the order in which items are sorted on a page matches the expected order
- * when the appropriate sorting algorithm is applied.
- * @param {WebdriverIO.ElementArray} array
- * @param {(str1, str2) => number} sortFunction
- */
-function _compareSortedArrays(array, sortFunction) {
-  let actual = array.map((element) => element.getText());
-  // Convert values to numbers for prices
-  if (actual[0].includes('$')) {
-    // @ts-ignore
-    actual = actual.map((text) => parseFloat(text.replace('$', '')));
-  }
-  let expected = [...actual];
-  // Using the sort function on this array should do nothing if already sorted properly
-  expected.sort(sortFunction);
-  expect(expected).toEqual(actual);
-}

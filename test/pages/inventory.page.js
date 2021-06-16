@@ -6,7 +6,7 @@ class InventoryPage extends GeneralPage {
   }
 
   get subheaderLabel() {
-    return $('div.product_label');
+    return $('span.title');
   }
 
   get sortDropdown() {
@@ -43,6 +43,7 @@ class InventoryPage extends GeneralPage {
 
   open() {
     super.open('inventory.html');
+    this.waitForElements();
   }
 
   addToCartButton(itemId) {
@@ -51,6 +52,23 @@ class InventoryPage extends GeneralPage {
 
   removeFromCartButton(itemId) {
     return $(`#remove-${itemId}`);
+  }
+
+  /**
+   * Picks an item randomly, to keep test data dynamic.
+   * @returns {Object} the chosen item's name, description, and price
+   */
+  pickItemRandomly() {
+    let itemNames = this.inventoryItemNames.map((item) => item.getText());
+    let itemDescriptions = this.inventoryItemDescriptions.map((item) => item.getText());
+    let itemPrices = this.inventoryItemPrices.map((item) => item.getText());
+    let choice = chance.integer({ min: 0, max: itemNames.length - 1 });
+    let randomItem = {
+      name: itemNames[choice],
+      description: itemDescriptions[choice],
+      price: itemPrices[choice]
+    };
+    return randomItem;
   }
 
   /**
@@ -67,6 +85,12 @@ class InventoryPage extends GeneralPage {
    */
   clickRemoveFromCart(itemId) {
     this.removeFromCartButton(itemId).waitForAndClick();
+  }
+
+  waitForElements(visibility = true) {
+    let elements = [this.subheaderLabel, this.sortDropdown, this.robotImage];
+    browser.waitForElements(elements, visibility);
+    browser.waitUntil(() => this.inventoryItems.length > 0);
   }
 }
 
