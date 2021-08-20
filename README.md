@@ -8,13 +8,13 @@ The goal of these tests are purely demonstrative of techniques for using WDIO, r
 
 ## Prerequisites
 
-- Google Chrome (last tested with version 91)
-- Node.js (last tested with version LTS 14.17.0)
+- Google Chrome (last tested with version 92)
+- Node.js (last tested with version LTS 14.17.5)
 
 ## How to run tests
 
-1. Clone this repository (`git clone https://github.com/Jmcosel/swaglabs-gui-tests.git`)
-2. Navigate to the root of the folder and install the dependencies (`cd swaglabs-gui-tests && npm i`)
+1. Clone this repository (`git clone https://github.com/Jmcosel/swaglabs-wdio-gui-tests.git`)
+2. Navigate to the root of the folder and install the dependencies (`cd swaglabs-wdio-gui-tests && npm i`)
 3. Run all tests with the following node command: `npx wdio wdio.config.js`
 4. Append `--spec` followed by the file path for a `.spec.js` file to just run that file.
 5. If you wish for a debugging experience, add `DEBUG=true` as an environment variable to the above command
