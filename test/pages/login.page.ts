@@ -34,7 +34,7 @@ class LoginPage extends GeneralPage {
     this.waitForElements();
   }
 
-  waitForElements(visibility) {
+  waitForElements(visibility?: boolean) {
     let elements = [this.headerLabel, this.usernameField, this.passwordField, this.submitButton, this.robotImage];
     browser.waitForElements(elements, visibility);
   }

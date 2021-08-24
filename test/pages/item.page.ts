@@ -54,7 +54,7 @@ class ItemPage extends GeneralPage {
     this.waitForElements();
   }
 
-  waitForElements(visibility) {
+  waitForElements(visibility?: boolean) {
     let elements = [this.itemName, this.itemDescription, this.itemPrice, this.itemImage];
     browser.waitForElements(elements, visibility);
   }

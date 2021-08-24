@@ -1,5 +1,11 @@
-export default class GeneralPage {
-  constructor(name, selector) {
+interface GeneralPage {
+  name: string,
+  selector: string
+}
+
+class GeneralPage {
+
+  constructor(name: string, selector: string) {
     this.name = name;
     this.selector = selector;
   }
@@ -28,3 +34,5 @@ export default class GeneralPage {
     });
   }
 }
+
+export default GeneralPage;

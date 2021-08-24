@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "module": "es2015",
+    "outDir": "./.tsbuild/",
+    "module": "commonjs",
     "target": "es2018",
     "types": [
         "node",
@@ -11,6 +12,6 @@
     "moduleResolution": "node",
     "checkJs": true,
   },
-  "include": ["**/*.js", "**/*.json", "global.d.ts", "wdio.d.ts"],
+  "include": ["**/*.ts", "**/*.json", "wdio.conf.js"],
   "exclude": ["node_modules"]
 }

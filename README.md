@@ -1,4 +1,4 @@
-# Swaglabs GUI Tests
+# Swaglabs WDIO GUI Tests
 
 ## Summary
 
