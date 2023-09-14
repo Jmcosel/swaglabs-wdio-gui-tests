@@ -1,8 +1,9 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
+import type { User } from '../util/users.js';
 
 class LoginPage extends GeneralPage {
   constructor() {
-    super('Login', 'div.login_wrapper');
+    super('Login', 'div.login_container');
   }
 
   get headerLabel() {
@@ -18,35 +19,32 @@ class LoginPage extends GeneralPage {
   }
 
   get submitButton() {
-    return $('input#login-button');
-  }
-
-  get robotImage() {
-    return $('div.bot_column');
+    return $('input[data-test="login-button"]');
   }
 
   get errorMsg() {
     return $('h3[data-test="error"]');
   }
 
-  open() {
-    super.open();
-    this.waitForElements();
+  async open() {
+    await super.open();
+    await this.waitForElements();
   }
 
-  waitForElements(visibility?: boolean) {
-    let elements = [this.headerLabel, this.usernameField, this.passwordField, this.submitButton, this.robotImage];
-    browser.waitForElements(elements, visibility);
+  async waitForElements(visibility?: boolean) {
+    const elements = [this.headerLabel, this.usernameField, this.passwordField, this.submitButton];
+    await browser.waitForElements(elements, visibility);
   }
 
   /**
    * Handles the login functionality.
-   * @param {Object} user
+   * @param user A fixture object containing the username/password credentials
+   *
    */
-  login(user) {
-    this.usernameField.setValue(user.username);
-    this.passwordField.setValue(user.password);
-    this.submitButton.click();
+  async login(user: User) {
+    await this.usernameField.setValue(user.username);
+    await this.passwordField.setValue(user.password);
+    await this.submitButton.click();
   }
 }
 

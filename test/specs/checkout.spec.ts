@@ -1,84 +1,93 @@
-import InventoryPage from '../pages/inventory.page';
-import HeaderModal from '../pages/header.modal';
-import CartPage from '../pages/cart.page';
-import LoginPage from '../pages/login.page';
-import CheckoutPage from '../pages/checkout.page';
-import Users from '../util/users';
-import { nameToId } from '../util/misc';
-
-before(function () {
-  LoginPage.open();
-  LoginPage.login(Users.standard);
-  InventoryPage.waitForPageShown();
-});
-
-beforeEach(() => {
-  InventoryPage.open();
-});
-
-afterEach(() => {
-  HeaderModal.clickResetAppState();
-});
+import InventoryPage from '../pages/inventory.page.js';
+import HeaderModal from '../pages/header.modal.js';
+import CartPage from '../pages/cart.page.js';
+import LoginPage from '../pages/login.page.js';
+import CheckoutPage from '../pages/checkout.page.js';
+import Users from '../util/users.js';
+import { nameToId } from '../util/misc.js';
 
 describe('Checkout', () => {
-  it('Adding/removing items to/from the cart shows/removes the item from the summary page', () => {
-    let itemName = InventoryPage.pickItemRandomly().name;
-    let itemElementId = nameToId(itemName);
-    InventoryPage.clickAddToCart(itemElementId);
-    HeaderModal.shoppingCartIcon.click();
-    CartPage.waitForPageShown();
-    CartPage.waitForElements();
-    let cartResult = CartPage.inventoryItems.find((element) => element.getText() === itemName);
-    expect(cartResult).toExist();
-    CartPage.clickRemoveFromCart(itemElementId);
-    cartResult = CartPage.inventoryItems.find((element) => element.getText() === itemName);
-    expect(cartResult).not.toExist();
+  before(async () => {
+    await LoginPage.open();
+    await LoginPage.login(Users.standard);
+    await InventoryPage.waitForPageShown();
   });
 
-  it('User can navigate through the happy path flow without issue', () => {
-    /** The following assertions are tested in this flow:
+  beforeEach(async () => {
+    await InventoryPage.open();
+  });
+
+  afterEach(async () => {
+    await HeaderModal.clickResetAppState();
+  });
+
+  it('Adding/removing items to/from the cart shows/removes the item from the summary page', async () => {
+    const itemName = (await InventoryPage.pickItemRandomly()).name;
+    const itemElementId = nameToId(itemName);
+    await InventoryPage.clickAddToCart(itemElementId);
+    await HeaderModal.shoppingCartIcon.click();
+    await CartPage.waitForPageShown();
+    await CartPage.waitForElements();
+    let cartResults = await Promise.all(
+      (await CartPage.inventoryItems).map(async (element) => await element.getText())
+    );
+    let expectedCartResult = cartResults.find((item) => item === itemName);
+    await expect(expectedCartResult).toBeDefined();
+    await CartPage.clickRemoveFromCart(itemElementId);
+    cartResults = await Promise.all((await CartPage.inventoryItems).map(async (element) => await element.getText()));
+    expectedCartResult = cartResults.find((item) => item === itemName);
+    await expect(expectedCartResult).toBeUndefined();
+  });
+
+  it('User can navigate through the happy path flow without issue', async () => {
+    /**
+     * The following assertions are tested in this flow:
      * - Item total (across two items), and the 8% tax, are calculated correctly
      * - The cart is reset when checkout is finished
      */
-    let item1 = InventoryPage.pickItemRandomly();
-    let item2;
+    const item1 = await InventoryPage.pickItemRandomly();
+    let item2: {
+      name: string;
+      description: string;
+      price: string;
+    };
     do {
-      item2 = InventoryPage.pickItemRandomly();
+      item2 = await InventoryPage.pickItemRandomly();
     } while (item1.name === item2.name);
-    InventoryPage.clickAddToCart(nameToId(item1.name));
-    InventoryPage.clickAddToCart(nameToId(item2.name));
-    HeaderModal.shoppingCartIcon.click();
-    CartPage.waitForPageShown();
-    CartPage.checkoutButton.waitForAndClick();
-    CheckoutPage.waitForPageShown();
-    CheckoutPage.waitForElements();
-    CheckoutPage.fillFields(Users.standard);
-    CheckoutPage.continueButton.click();
-    let expectedSubtotal = parseFloat(item1.price.replace('$', '')) + parseFloat(item2.price.replace('$', ''));
-    let expectedTax = expectedSubtotal * 0.08;
-    let expectedTotal = expectedSubtotal + expectedTax;
-    expect(CheckoutPage.subtotalLabel).toHaveTextContaining(expectedSubtotal.toFixed(2));
-    expect(CheckoutPage.taxLabel).toHaveTextContaining(expectedTax.toFixed(2));
-    expect(CheckoutPage.totalLabel).toHaveTextContaining(expectedTotal.toFixed(2));
-    CheckoutPage.finishButton.click();
-    CheckoutPage.completeContainer.waitForDisplayed();
-    expect(CheckoutPage.completePonyImage).toBeDisplayed();
-    CheckoutPage.returnToInventoryButton.waitForAndClick();
-    InventoryPage.waitForPageShown();
+    await InventoryPage.clickAddToCart(nameToId(item1.name));
+    await InventoryPage.clickAddToCart(nameToId(item2.name));
+    await HeaderModal.shoppingCartIcon.click();
+    await CartPage.waitForPageShown();
+    await CartPage.checkoutButton.waitForAndClick();
+    await CheckoutPage.waitForPageShown();
+    await CheckoutPage.waitForElements();
+    await CheckoutPage.fillFields(Users.standard);
+    await CheckoutPage.continueButton.click();
+    const expectedSubtotal = parseFloat(item1.price.replace('$', '')) + parseFloat(item2.price.replace('$', ''));
+    const expectedTax = expectedSubtotal * 0.08;
+    const expectedTotal = expectedSubtotal + expectedTax;
+    await expect(CheckoutPage.subtotalLabel).toHaveTextContaining(expectedSubtotal.toFixed(2));
+    await expect(CheckoutPage.taxLabel).toHaveTextContaining(expectedTax.toFixed(2));
+    await expect(CheckoutPage.totalLabel).toHaveTextContaining(expectedTotal.toFixed(2));
+    await CheckoutPage.finishButton.click();
+    await CheckoutPage.completeContainer.waitForDisplayed();
+    await expect(CheckoutPage.completePonyImage).toBeDisplayed();
+    await CheckoutPage.returnToInventoryButton.waitForAndClick();
+    await InventoryPage.waitForPageShown();
     // If the bage isn't displayed, then no items are registered as added
-    expect(HeaderModal.shoppingCartBadge).not.toBeDisplayed();
+    await expect(HeaderModal.shoppingCartBadge).not.toBeDisplayed();
   });
 
-  it('Field information is required to checkout', () => {
-    let item = InventoryPage.pickItemRandomly();
-    InventoryPage.clickAddToCart(nameToId(item.name));
-    HeaderModal.shoppingCartIcon.click();
-    CartPage.waitForPageShown();
-    CartPage.checkoutButton.waitForAndClick();
-    CheckoutPage.waitForPageShown();
-    CheckoutPage.continueButton.waitForAndClick();
+  it('Field information is required to checkout', async () => {
+    const item = await InventoryPage.pickItemRandomly();
+    await InventoryPage.clickAddToCart(nameToId(item.name));
+    await HeaderModal.shoppingCartIcon.click();
+    await CartPage.waitForPageShown();
+    await CartPage.checkoutButton.waitForAndClick();
+    await CheckoutPage.waitForPageShown();
+    await CheckoutPage.continueButton.waitForAndClick();
     // Verify the error container appesrs, and that a label from the next screen doesn't appear
-    expect(CheckoutPage.fieldErrorContainer).toBeDisplayed();
-    expect(CheckoutPage.subtotalLabel).not.toBeDisplayed();
+    await expect(CheckoutPage.fieldErrorContainer).toBeDisplayed();
+    await expect(CheckoutPage.subtotalLabel).not.toBeDisplayed();
   });
 });

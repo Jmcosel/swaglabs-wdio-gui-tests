@@ -1,4 +1,4 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
 
 class ItemPage extends GeneralPage {
   constructor() {
@@ -6,7 +6,7 @@ class ItemPage extends GeneralPage {
   }
 
   get backButton() {
-    return $('#back-to-products');
+    return $('button[data-test="back-to-products"]');
   }
 
   get itemName() {
@@ -25,38 +25,38 @@ class ItemPage extends GeneralPage {
     return $('img.inventory_details_img');
   }
 
-  addToCartButton(itemId) {
-    return $(`#add-to-cart-${itemId}`);
+  async addToCartButton(itemId: string) {
+    return $(`button[data-test="add-to-cart-${itemId}"]`);
   }
 
-  removeFromCartButton(itemId) {
-    return $(`#remove-${itemId}`);
+  async removeFromCartButton(itemId: string) {
+    return $(`button[data-test="remove-${itemId}"]`);
   }
 
   /**
    * Adds the specified item name to the shopping cart.
-   * @param {String} itemId
+   * @param itemId The item's id
    */
-  clickAddToCart(itemId) {
-    this.addToCartButton(itemId).waitForAndClick();
+  async clickAddToCart(itemId: string) {
+    await (await this.addToCartButton(itemId)).waitForAndClick();
   }
 
   /**
    * Removes the specified item name from the shopping cart.
-   * @param {String} itemId
+   * @param itemId The item's id
    */
-  clickRemoveFromCart(itemId) {
-    this.removeFromCartButton(itemId).waitForAndClick();
+  async clickRemoveFromCart(itemId: string) {
+    await (await this.removeFromCartButton(itemId)).waitForAndClick();
   }
 
-  open(itemId) {
-    super.open(`inventory-item.html?id=${itemId}`);
-    this.waitForElements();
+  async open(itemId: string) {
+    await super.open(`inventory-item.html?id=${itemId}`);
+    await this.waitForElements();
   }
 
-  waitForElements(visibility?: boolean) {
-    let elements = [this.itemName, this.itemDescription, this.itemPrice, this.itemImage];
-    browser.waitForElements(elements, visibility);
+  async waitForElements(visibility?: boolean) {
+    const elements = [this.itemName, this.itemDescription, this.itemPrice, this.itemImage];
+    await browser.waitForElements(elements, visibility);
   }
 }
 

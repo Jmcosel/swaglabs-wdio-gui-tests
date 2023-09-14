@@ -1,4 +1,4 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
 
 class HeaderModal extends GeneralPage {
   constructor() {
@@ -41,29 +41,29 @@ class HeaderModal extends GeneralPage {
     return $('a#reset_sidebar_link');
   }
 
-  clickAllItems() {
-    this.menuIcon.waitForAndClick();
-    this.allItemsLink.waitForAndClick();
+  async clickAllItems() {
+    await this.menuIcon.waitForAndClick();
+    await this.allItemsLink.waitForAndClick();
   }
 
-  clickAbout() {
-    this.menuIcon.waitForAndClick();
-    this.aboutLink.waitForAndClick();
+  async clickAbout() {
+    await this.menuIcon.waitForAndClick();
+    await this.aboutLink.waitForAndClick();
   }
 
-  clickLogout() {
-    this.menuIcon.waitForAndClick();
-    this.logoutLink.waitForAndClick();
+  async clickLogout() {
+    await this.menuIcon.waitForAndClick();
+    await this.logoutLink.waitForAndClick();
   }
 
-  clickResetAppState() {
-    this.menuIcon.waitForAndClick();
-    this.resetAppLink.waitForAndClick();
+  async clickResetAppState() {
+    await this.menuIcon.waitForAndClick();
+    await this.resetAppLink.waitForAndClick();
   }
 
-  waitForElements(visibility = true) {
-    let elements = [this.menuIcon, this.mainLogo, this.shoppingCartIcon];
-    browser.waitForElements(elements, visibility);
+  async waitForElements(visibility = true) {
+    const elements = [this.menuIcon, this.mainLogo, this.shoppingCartIcon];
+    await browser.waitForElements(elements, visibility);
   }
 }
 

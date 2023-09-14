@@ -1,8 +1,8 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
 
 class InventoryPage extends GeneralPage {
   constructor() {
-    super('Inventory', 'div.inventory_container');
+    super('Inventory', 'div#inventory_container');
   }
 
   get subheaderLabel() {
@@ -10,7 +10,7 @@ class InventoryPage extends GeneralPage {
   }
 
   get sortDropdown() {
-    return $('select.product_sort_container');
+    return $('select[data-test="product_sort_container"]');
   }
 
   get inventoryItems() {
@@ -33,37 +33,35 @@ class InventoryPage extends GeneralPage {
     return $$('div.inventory_item_price');
   }
 
-  get robotImage() {
-    return $('img.footer_robot');
-  }
-
-  inventoryItemLink(itemName) {
+  async inventoryItemLink(itemName: string) {
     return $(`div=${itemName}`);
   }
 
-  open() {
-    super.open('inventory.html');
-    this.waitForElements();
+  async open() {
+    await super.open('inventory.html');
+    await this.waitForElements();
   }
 
-  addToCartButton(itemId) {
-    return $(`#add-to-cart-${itemId}`);
+  async addToCartButton(itemId: string) {
+    return $(`[data-test="add-to-cart-${itemId}"]`);
   }
 
-  removeFromCartButton(itemId) {
-    return $(`#remove-${itemId}`);
+  async removeFromCartButton(itemId: string) {
+    return $(`[data-test="remove-${itemId}"]`);
   }
 
   /**
    * Picks an item randomly, to keep test data dynamic.
-   * @returns {Object} the chosen item's name, description, and price
+   * @returns The chosen item's name, description, and price
    */
-  pickItemRandomly() {
-    let itemNames = this.inventoryItemNames.map((item) => item.getText());
-    let itemDescriptions = this.inventoryItemDescriptions.map((item) => item.getText());
-    let itemPrices = this.inventoryItemPrices.map((item) => item.getText());
-    let choice = chance.integer({ min: 0, max: itemNames.length - 1 });
-    let randomItem = {
+  async pickItemRandomly() {
+    const itemNames = await Promise.all((await this.inventoryItemNames).map(async (item) => await item.getText()));
+    const itemDescriptions = await Promise.all(
+      (await this.inventoryItemDescriptions).map(async (item) => await item.getText())
+    );
+    const itemPrices = await Promise.all((await this.inventoryItemPrices).map(async (item) => await item.getText()));
+    const choice = chance.integer({ min: 0, max: itemNames.length - 1 });
+    const randomItem = {
       name: itemNames[choice],
       description: itemDescriptions[choice],
       price: itemPrices[choice]
@@ -73,24 +71,24 @@ class InventoryPage extends GeneralPage {
 
   /**
    * Adds the specified item name to the shopping cart.
-   * @param {String} itemId
+   * @param itemId The item's id
    */
-  clickAddToCart(itemId) {
-    this.addToCartButton(itemId).waitForAndClick();
+  async clickAddToCart(itemId: string) {
+    await (await this.addToCartButton(itemId)).waitForAndClick();
   }
 
   /**
    * Removes the specified item name from the shopping cart.
-   * @param {String} itemId
+   * @param itemId The item's id
    */
-  clickRemoveFromCart(itemId) {
-    this.removeFromCartButton(itemId).waitForAndClick();
+  async clickRemoveFromCart(itemId: string) {
+    await (await this.removeFromCartButton(itemId)).waitForAndClick();
   }
 
-  waitForElements(visibility = true) {
-    let elements = [this.subheaderLabel, this.sortDropdown, this.robotImage];
-    browser.waitForElements(elements, visibility);
-    browser.waitUntil(() => this.inventoryItems.length > 0);
+  async waitForElements(visibility = true) {
+    const elements = [this.subheaderLabel, this.sortDropdown];
+    await browser.waitForElements(elements, visibility);
+    await browser.waitUntil(async () => (await this.inventoryItems).length > 0);
   }
 }
 

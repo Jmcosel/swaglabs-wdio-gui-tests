@@ -5,15 +5,16 @@
       "name": "WDIO Debug",
       "type": "node",
       "request": "launch",
-      "args": ["wdio.conf.js", "--spec", "${file}"],
+      "args": ["wdio.conf.ts", "--spec", "${file}"],
+      "runtimeArgs": ["--loader", "ts-node/esm"],
       "env": {
         "DEBUG": "true"
       },
       "autoAttachChildProcesses": true,
-      "program": "${workspaceRoot}/node_modules/@wdio/cli/bin/wdio.js",
+      "program": "${workspaceFolder}/node_modules/@wdio/cli/bin/wdio.js",
+      "console": "integratedTerminal",
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
-        "${workspaceFolder}/lib/**/*.js",
         "<node_internals>/**/*.js"
       ]
     }

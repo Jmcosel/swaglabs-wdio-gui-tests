@@ -1,4 +1,4 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
 
 class CheckoutPage extends GeneralPage {
   constructor() {
@@ -10,15 +10,15 @@ class CheckoutPage extends GeneralPage {
   }
 
   get firstNameField() {
-    return $('#first-name');
+    return $('input[data-test="firstName"]');
   }
 
   get lastNameField() {
-    return $('#last-name');
+    return $('input[data-test="lastName"]');
   }
 
   get zipCodeField() {
-    return $('#postal-code');
+    return $('input[data-test="postalCode"]');
   }
 
   get fieldErrorContainer() {
@@ -38,19 +38,19 @@ class CheckoutPage extends GeneralPage {
   }
 
   get continueButton() {
-    return $('#continue');
+    return $('input[data-test="continue"]');
   }
 
   get cancelButton() {
-    return $('#cancel');
+    return $('button[data-test="cancel"]');
   }
 
   get finishButton() {
-    return $('#finish');
+    return $('button[data-test="finish"]');
   }
 
   get returnToInventoryButton() {
-    return $('#back-to-products');
+    return $('button[data-test="back-to-products"]');
   }
 
   get completeContainer() {
@@ -63,16 +63,16 @@ class CheckoutPage extends GeneralPage {
 
   /**
    * Fills out the fields and then submits to the next checkout step
-   * @param {Object} customerInfo
+   * @param customerInfo - An object that includes the full name and zip code of the customer's information.
    */
-  fillFields(customerInfo) {
-    this.firstNameField.setValue(customerInfo.firstName);
-    this.lastNameField.setValue(customerInfo.lastName);
-    this.zipCodeField.setValue(customerInfo.zipCode);
+  async fillFields(customerInfo: { firstName: string; lastName: string; zipCode: string }): Promise<void> {
+    await this.firstNameField.setValue(customerInfo.firstName);
+    await this.lastNameField.setValue(customerInfo.lastName);
+    await this.zipCodeField.setValue(customerInfo.zipCode);
   }
 
-  waitForElements(visibility = true) {
-    let elements = [
+  async waitForElements(visibility = true) {
+    const elements = [
       this.headerLabel,
       this.firstNameField,
       this.lastNameField,
@@ -80,7 +80,7 @@ class CheckoutPage extends GeneralPage {
       this.continueButton,
       this.cancelButton
     ];
-    browser.waitForElements(elements, visibility);
+    await browser.waitForElements(elements, visibility);
   }
 }
 

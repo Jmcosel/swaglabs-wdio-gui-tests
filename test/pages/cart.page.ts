@@ -1,4 +1,4 @@
-import GeneralPage from './general.page';
+import GeneralPage from './general.page.js';
 
 class CartPage extends GeneralPage {
   constructor() {
@@ -9,35 +9,39 @@ class CartPage extends GeneralPage {
     return $$('div.inventory_item_name');
   }
 
+  async inventoryItemLink(itemName: string) {
+    return $(`div=${itemName}`);
+  }
+
   get checkoutButton() {
-    return $('#checkout');
+    return $('button[data-test="checkout"]');
   }
 
   get cancelButton() {
-    return $('#continue-shopping');
+    return $('button[data-test="continue-shopping"]');
   }
 
-  removeFromCartButton(itemId) {
-    return $(`#remove-${itemId}`);
+  async removeFromCartButton(itemId: string) {
+    return $(`button[data-test="remove-${itemId}"]`);
   }
 
   /**
    * Removes the specified item name from the shopping cart.
-   * @param {String} itemName
+   * @param itemName - The name of the item to be removed.
    */
-  clickRemoveFromCart(itemName) {
-    let itemId = itemName.replace(/\s/g, '-').toLowerCase();
-    this.removeFromCartButton(itemId).waitForAndClick();
+  async clickRemoveFromCart(itemName: string) {
+    const itemId = itemName.replace(/\s/g, '-').toLowerCase();
+    await (await this.removeFromCartButton(itemId)).waitForAndClick();
   }
 
-  open() {
-    super.open('cart.html');
-    this.waitForElements();
+  async open() {
+    await super.open('cart.html');
+    await this.waitForElements();
   }
 
-  waitForElements(visibility = true) {
-    let elements = [this.checkoutButton, this.cancelButton];
-    browser.waitForElements(elements, visibility);
+  async waitForElements(visibility = true) {
+    const elements = [this.checkoutButton, this.cancelButton];
+    await browser.waitForElements(elements, visibility);
   }
 }
 

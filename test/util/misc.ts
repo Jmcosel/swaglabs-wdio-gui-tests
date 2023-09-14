@@ -1,29 +1,30 @@
 /**
  * Converts an itemName into an elementId (removing spaces, symbols, etc.)
- * @param {String} itemName
- * @returns {String} elementId
+ * @param itemName The item's name
+ * @returns elementId
  */
-function nameToId(itemName) {
+export function nameToId(itemName: string) {
   return itemName.replace(/\s/g, '-').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\./g, '\\.').toLowerCase();
 }
 
 /**
  * Checks that the order in which items are sorted on a page matches the expected order
  * when the appropriate sorting algorithm is applied.
- * @param {WebdriverIO.ElementArray} array
- * @param {(str1, str2) => number} sortFunction
+ * @param array An array of WebdriverIO elements
+ * @param sortFunction The function to use to sort the array of elements
  */
-function compareSortedArrays(array, sortFunction) {
-  let actual = array.map((element) => element.getText());
-  // Convert values to numbers for prices
-  if (actual[0].includes('$')) {
-    // @ts-ignore
-    actual = actual.map((text) => parseFloat(text.replace('$', '')));
-  }
-  let expected = [...actual];
+export async function compareSortedArrays(
+  array: WebdriverIO.Element[],
+  sortFunction: (val1: number, val2: number) => number
+) {
+  const actualArray = await Promise.all(
+    array.map(async (element) => {
+      const text = await element.getText();
+      return parseFloat(text.replace('$', ''));
+    })
+  );
+  const expectedArray = [...actualArray];
   // Using the sort function on this array should do nothing if already sorted properly
-  expected.sort(sortFunction);
-  expect(expected).toEqual(actual);
+  expectedArray.sort(sortFunction);
+  await expect(expectedArray).toEqual(actualArray);
 }
-
-export { nameToId, compareSortedArrays };

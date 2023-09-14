@@ -1,33 +1,33 @@
-import InventoryPage from '../pages/inventory.page';
-import LoginPage from '../pages/login.page';
-import Users from '../util/users';
-
-beforeEach(() => {
-  browser.deleteCookies();
-  LoginPage.open();
-});
+import InventoryPage from '../pages/inventory.page.js';
+import LoginPage from '../pages/login.page.js';
+import Users from '../util/users.js';
 
 describe('Login/Authentication', () => {
-  it('A standard user can log in successfully', () => {
-    LoginPage.login(Users.standard);
-    expect(InventoryPage.mainElement).toBeDisplayed();
+  beforeEach(async () => {
+    await browser.deleteCookies();
+    await LoginPage.open();
   });
 
-  it('A locked out user cannot access the Products page', () => {
-    LoginPage.login(Users.locked_out);
-    expect(LoginPage.mainElement).toBeDisplayed();
-    LoginPage.errorMsg.waitForDisplayed({
-      timeoutMsg: `The login error message never displayed.`
-    });
-    expect(LoginPage.errorMsg).toHaveTextContaining('locked out');
+  it('A standard user can log in successfully', async () => {
+    await LoginPage.login(Users.standard);
+    await expect(InventoryPage.mainElement).toBeDisplayed();
   });
 
-  it('Trying to access a page directly without authentication fails', () => {
-    browser.url('inventory.html');
-    expect(InventoryPage.mainElement).not.toBeDisplayed();
-    LoginPage.errorMsg.waitForDisplayed({
+  it('A locked out user cannot access the Products page', async () => {
+    await LoginPage.login(Users.locked_out);
+    await expect(LoginPage.mainElement).toBeDisplayed();
+    await LoginPage.errorMsg.waitForDisplayed({
       timeoutMsg: `The login error message never displayed.`
     });
-    expect(LoginPage.errorMsg).toHaveTextContaining('can only access');
+    await expect(LoginPage.errorMsg).toHaveTextContaining('locked out');
+  });
+
+  it('Trying to access a page directly without authentication fails', async () => {
+    await browser.url('inventory.html');
+    await expect(InventoryPage.mainElement).not.toBeDisplayed();
+    await LoginPage.errorMsg.waitForDisplayed({
+      timeoutMsg: `The login error message never displayed.`
+    });
+    await expect(LoginPage.errorMsg).toHaveTextContaining('can only access');
   });
 });

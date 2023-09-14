@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "outDir": "./.tsbuild/",
-    "module": "commonjs",
-    "target": "es2018",
-    "types": [
-        "node",
-        "webdriverio/sync",
-        "@wdio/mocha-framework",
-        "expect-webdriverio"
-    ],
-    "moduleResolution": "node",
-    "checkJs": true,
+    // Code generation options
+    "target": "esnext",
+    "module": "nodenext",
+    // Type checking options
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowJs": true,
+    "checkJs": false,
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework", "expect-webdriverio"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "noErrorTruncation": true
   },
-  "include": ["**/*.ts", "**/*.json", "wdio.conf.js"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "<node_internals>/**"]
 }
